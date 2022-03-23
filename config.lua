@@ -6,7 +6,7 @@ map[2] = "Back Door"
 map[5] = "Garage Entry"
 
 -- MQTT config
-topic_prefix = "pat/alarm/"
+topic_prefix = "door/alarm/"
 status_topic = "status"
 
 -- Map MQTT payloads

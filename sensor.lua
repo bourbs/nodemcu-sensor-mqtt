@@ -40,21 +40,18 @@ end
 -- init mqtt client and connect
 m = mqtt.Client(MQTT_CLIENT_ID, 120, MQTT_USER, MQTT_PASS)
 
-m:on("offline", function(client)
-    print ("mqtt offline")
-    connected = 0
-  end)
-
--- connect to mqtt with creds and autoreconnect
-m:connect(MQTT_HOST, MQTT_PORT, 0, 1, function(client)
-    print("mqtt connected")
-    m:publish(topic_prefix..status_topic, "online", 0, 0)
-    connected = 1
-  end,
-  function(client, reason) print("failed reason: "..reason) end)
+m:on("offline", function(client) print ("mqtt offline") end)
 
 -- setup lwt topic
 m:lwt(topic_prefix..status_topic, "offline", 0, 0)
+
+-- connect to mqtt with creds and autoreconnect
+m:connect(MQTT_HOST, MQTT_PORT, false, function(client)
+    print("mqtt connected")
+    connected = 1
+    client:publish(topic_prefix..status_topic, "online", 0, 0, function(client) end)
+  end,
+  function(client, reason) print("mqtt failed reason: "..reason) end)
 
 -- now map gpio stuff
 for p,v in pairs(map) do
